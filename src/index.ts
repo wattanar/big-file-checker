@@ -134,7 +134,7 @@ pathContainer.add(pathInput);
 
 const status = new TextRenderable(renderer, {
   id: "status",
-  content: "Scanning for files > 10MB...",
+  content: "Ready. Press 'r' to scan for files > 10MB",
   fg: "#94A3B8",
   marginBottom: 1,
 });
@@ -219,6 +219,7 @@ function startEditingPath() {
   pathValue.visible = false;
   pathInput.visible = true;
   pathInput.editBuffer.setText(currentScanPath);
+  pathInput.editBuffer.setCursor(0, currentScanPath.length);
   pathInput.focus();
   renderer.requestRender();
 }
@@ -251,8 +252,10 @@ renderer.keyInput.on("keypress", (key: KeyEvent) => {
   }
 
   if (key.name === "r") {
+    key.preventDefault();
     refreshFiles();
   } else if (key.name === "p") {
+    key.preventDefault();
     startEditingPath();
   } else if (["up", "down", "j", "k"].includes(key.name || "")) {
     if (pendingDeletePath) {
@@ -271,5 +274,3 @@ const instructions = new TextRenderable(renderer, {
   marginTop: 1,
 });
 root.add(instructions);
-
-await refreshFiles();
